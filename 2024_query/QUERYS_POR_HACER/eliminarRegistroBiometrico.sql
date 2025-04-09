@@ -1,0 +1,7 @@
+SELECT * FROM nombreTabla
+WHERE fecha < CURRENT_DATE - INTERVAL '1 day';
+
+
+DELETE FROM nombreTabla
+WHERE fecha < CURRENT_DATE - INTERVAL '1 day'
+RETURNING *;

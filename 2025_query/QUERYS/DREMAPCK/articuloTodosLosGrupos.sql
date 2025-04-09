@@ -1,0 +1,27 @@
+SELECT 
+T0."ItemCode" ,
+T0."U_SYP_GRUPO",
+T1."Code" AS "Cod Base",
+T1."Name" AS "Nombre Base",
+T2."Code" AS "Cod SubGr 1",
+T2."Name" AS "Nombre SubGr 1",
+T3."Code" AS "Cod SubGr 2",
+T3."Name" AS "Nombre SubGr 2",
+T4."Code" AS "Cod SubGr 3",
+T4."Name" AS "Nombre SubGr 3",
+T5."Code" AS "Cod SubGr 4",
+T5."Name" AS "Nombre SubGr 4",
+T0."U_FIGU_SUBGRUPO5"
+--T6."Code" AS "Cod SubGr 5",
+--T6."Name" AS "Nombre SubGr 5"
+
+
+FROM OITM T0 
+ LEFT JOIN "SBO_FIGURETTI_PRO"."@SYP_GRUPO" T1 ON T0."U_SYP_GRUPO" = T1."Code"
+
+LEFT JOIN "SBO_FIGURETTI_PRO"."@SYP_SUBGRUPO1" T2 ON T0."U_SYP_SUBGRUPO1" = T2."Code"
+LEFT JOIN "SBO_FIGURETTI_PRO"."@SYP_SUBGRUPO2" T3 ON T0."U_SYP_SUBGRUPO2" = T3."Code"
+LEFT JOIN "SBO_FIGURETTI_PRO"."@SYP_SUBGRUPO3" T4 ON T0."U_SYP_SUBGRUPO3" = T4."Code"
+LEFT JOIN "SBO_FIGURETTI_PRO"."@SYP_SUBGRUPO4" T5 ON T0."U_SYP_SUBGRUPO4" = T5."Code"
+--LEFT JOIN "SBO_FIGURETTI_PRO"."@SYP_SUBGRUPO5" T6 ON T0."U_FIGU_SUBGRUPO5" = T6."Code"
+WHERE T0."ItemCode" LIKE '07%' LIMIT 10
