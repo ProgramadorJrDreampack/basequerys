@@ -40,7 +40,6 @@ INNER JOIN BEAS_STILLSTANDGRUND T1 ON T0."GRUNDID" =  T1."GRUNDID"    --Causa de
 WHERE T0."GRUNDID" = '014' AND T0."DATUM_VON" >= ADD_DAYS(CURRENT_DATE, -2)  -- desde ayer
 ORDER BY T0."DATUM_VON" DESC;
 
-
 -- ********************************************************************************************************
 SELECT 
 T0."APLATZ_ID" AS "Recurso",
