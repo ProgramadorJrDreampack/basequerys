@@ -185,3 +185,41 @@ AND T0."CreateDate" >= ADD_DAYS(CURRENT_DATE, -7)
 AND T0."DocDate" >= ADD_DAYS(CURRENT_DATE, -7)*/
 AND P2."Requester" = 'MAN01'
 ORDER BY T0."DocDate";
+
+
+-- *****************************************************************************************************************************
+
+SELECT
+    --P2."DocEntry",
+    P2."DocNum" AS "NumDocSC",
+    P2."DocDate" AS "FechaDocSC",
+    P2."DocTime" AS "HoraDocSC",
+    --P2."CreateTS",
+    
+    --T0."DocEntry",
+    T0."DocNum" AS "NumDocPedido",
+    T0."DocDate" AS "FechaDocPedido",
+    T0."DocTime" AS "HoraDocPedido",
+    --T0."CreateTS",
+    T0."CreateDate",
+    CASE 
+        WHEN T0."DocType" = 'I' THEN 'Articulo'
+        WHEN T0."DocType" = 'S' THEN 'Servicio'
+    END AS "Tipo",
+    T1."ItemCode",
+    COALESCE(T2."ItemName", T1."Dscription")
+    
+   
+FROM OPOR T0 
+INNER JOIN POR1 T1 ON T0."DocEntry" = T1."DocEntry"
+LEFT JOIN PRQ1 P1 ON T1."BaseEntry" = P1."DocEntry" AND T1."BaseLine" = P1."LineNum"
+LEFT JOIN OPRQ P2 ON P1."DocEntry" = P2."DocEntry"
+LEFT JOIN OITM T2 ON T1."ItemCode" = T2."ItemCode"
+WHERE T0."DocStatus" = 'O' 
+AND (
+    T0."CreateDate" < CURRENT_DATE -- cualquier documento de ayer
+     OR 
+        (T0."CreateDate" = CURRENT_DATE AND T0."DocTime" < 160000)  --si el documento es del día actual, solo se incluirá si fue creado antes de las 4:00 PM. FORMATO HMS
+    ) 
+AND T0."CreateDate" >= ADD_DAYS(CURRENT_DATE, -7)
+AND P2."Requester" = 'MAN01'

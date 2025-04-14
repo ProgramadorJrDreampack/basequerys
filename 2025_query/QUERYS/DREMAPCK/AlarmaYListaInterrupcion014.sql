@@ -762,3 +762,47 @@ WHERE
 ORDER BY T1."DATUM_VON" DESC;
 
 
+/* asi quedo la alarma de interrupciones por mantenimiento correctivo */
+SELECT 
+    T0."APLATZ_ID" AS "Recurso",
+    T0."BEZ" AS "DescripcionRecurso",
+    T1."DATUM_VON" AS "FechaInicio",
+    TO_NVARCHAR(TO_TIME(T1."DATUM_VON"), 'HH24:MI:SS') AS "HoraInicio", 
+    CASE 
+        WHEN CAST(T1."DATUM_BIS" AS DATE) = '2050-01-01' THEN NULL 
+        ELSE T1."DATUM_BIS" 
+    END AS "FechaFin",
+    CASE 
+        WHEN CAST(T1."DATUM_BIS" AS DATE) = '2050-01-01' THEN NULL 
+        ELSE TO_NVARCHAR(TO_TIME(T1."DATUM_BIS"), 'HH24:MI:SS') 
+    END AS "HoraFin",
+    CASE 
+        WHEN CAST(T1."DATUM_BIS" AS DATE) = '2050-01-01' THEN NULL 
+        ELSE 
+            CASE 
+                WHEN SECONDS_BETWEEN(T1."DATUM_VON", T1."DATUM_BIS") > 86400 THEN NULL 
+                ELSE TO_NVARCHAR(TO_TIME(ADD_SECONDS('00:00:00', SECONDS_BETWEEN(T1."DATUM_VON", T1."DATUM_BIS"))), 'HH24:MI:SS') 
+            END 
+    END AS "Duración",
+    CASE 
+        WHEN CAST(T1."DATUM_BIS" AS DATE) = '2050-01-01' THEN NULL 
+        ELSE CAST(SECONDS_BETWEEN(T1."DATUM_VON", T1."DATUM_BIS") AS DECIMAL(18,2)) / 3600 
+    END AS "DuraciónHoras",
+    T1."GRUNDID" AS "Motivo",
+    T1."GRUNDINFO" AS "MotivoDescripcion",
+    T1."PERS_ID" AS "PersonalIdEntrada",
+    T1."PERS_ID_Name" AS "NombrePersonalEntrada",
+    T1."PERS_ID_END" AS "PersonalIdSalida", 
+    T1."PERS_ID_END_Name" AS "NombrePersonalSalida",
+    T1."UDF1" AS "Comentario",
+    T1."ERFUSER"
+
+FROM BEAS_APLATZ T0
+INNER JOIN BEAS_APLATZ_STILLSTAND T1 ON T0."APLATZ_ID" = T1."APLATZ_ID"
+INNER JOIN BEAS_STILLSTANDGRUND T2 ON T1."GRUNDID" =  T2."GRUNDID" 
+WHERE 
+    T1."GRUNDID" = '014' 
+    AND CAST(T1."DATUM_VON" AS DATE) = CAST(CURRENT_DATE AS DATE)  
+    AND T1."DATUM_VON" >= ADD_SECONDS(CURRENT_TIMESTAMP, -3600)
+ORDER BY T1."DATUM_VON" DESC;
+
