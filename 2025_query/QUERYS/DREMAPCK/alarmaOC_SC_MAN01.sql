@@ -223,3 +223,157 @@ AND (
     ) 
 AND T0."CreateDate" >= ADD_DAYS(CURRENT_DATE, -7)
 AND P2."Requester" = 'MAN01'
+ORDER BY P2."DocDate" DESC;
+
+
+-- Ejemplo de filtro para un solo día (desde ayer 16:00 hasta hoy 16:00):
+
+-- WHERE 
+-- (
+--     (T0."CreateDate" = ADD_DAYS(CURRENT_DATE, -1) AND T0."DocTime" >= 960) -- desde ayer 16:00 en adelante
+--     OR
+--     (T0."CreateDate" = CURRENT_DATE AND T0."DocTime" < 960) -- hasta hoy antes de 16:00
+-- )
+-- Para los últimos 7 días, puedes usar:
+
+-- AND (
+--     (T0."CreateDate" = ADD_DAYS(CURRENT_DATE, -1) AND T0."DocTime" >= 960)
+--     OR
+--     (T0."CreateDate" = CURRENT_DATE AND T0."DocTime" < 960)
+--     OR
+--     (
+--         T0."CreateDate" > ADD_DAYS(CURRENT_DATE, -7) 
+--         AND T0."CreateDate" < ADD_DAYS(CURRENT_DATE, -1)
+--     )
+-- )
+
+
+/* 
+Hay 24 horas en un día.
+
+Cada hora tiene 60 minutos.
+
+Por lo tanto, hay 24 * 60 = 1440 minutos en un día.
+
+Para calcular las 4:00 PM en minutos desde la medianoche:
+
+4:00 PM es la hora 16 (contando desde la medianoche).
+
+Entonces, 16 horas * 60 minutos/hora = 960 minutos.
+ */
+
+
+
+SELECT
+    --P2."DocEntry",
+    P2."DocNum" AS "NumDocSC",
+    P2."DocDate" AS "FechaDocSC",
+    P2."DocTime" AS "HoraDocSC",
+    --P2."CreateTS",
+    
+    --T0."DocEntry",
+    T0."DocNum" AS "NumDocPedido",
+    T0."DocDate" AS "FechaDocPedido",
+    T0."DocTime" AS "HoraDocPedido",
+    --T0."CreateTS",
+    T0."CreateDate",
+    CASE 
+        WHEN T0."DocType" = 'I' THEN 'Articulo'
+        WHEN T0."DocType" = 'S' THEN 'Servicio'
+    END AS "Tipo",
+    T1."ItemCode",
+    COALESCE(T2."ItemName", T1."Dscription")
+    
+   
+FROM OPOR T0 
+INNER JOIN POR1 T1 ON T0."DocEntry" = T1."DocEntry"
+LEFT JOIN PRQ1 P1 ON T1."BaseEntry" = P1."DocEntry" AND T1."BaseLine" = P1."LineNum"
+LEFT JOIN OPRQ P2 ON P1."DocEntry" = P2."DocEntry"
+LEFT JOIN OITM T2 ON T1."ItemCode" = T2."ItemCode"
+WHERE T0."DocStatus" = 'O' 
+AND
+    (T0."CreateDate" = ADD_DAYS(CURRENT_DATE, -1) AND T0."DocTime" >= 960) -- desde ayer 16:00 en adelante , 960 minutos.
+    OR
+    (T0."CreateDate" = CURRENT_DATE AND T0."DocTime" < 960) -- hasta hoy antes de 16:00
+
+--AND T0."CreateDate" >= ADD_DAYS(CURRENT_DATE, -7)
+AND P2."Requester" = 'MAN01'
+ORDER BY P2."DocDate" DESC;
+
+-- **********************************************************************
+SELECT
+    --P2."DocEntry",
+    P2."DocNum" AS "NumDocSC",
+    P2."DocDate" AS "FechaDocSC",
+    P2."DocTime" AS "HoraDocSC",
+    --P2."CreateTS",
+    
+    --T0."DocEntry",
+    T0."DocNum" AS "NumDocPedido",
+    T0."DocDate" AS "FechaDocPedido",
+    T0."DocTime" AS "HoraDocPedido",
+    --T0."CreateTS",
+    T0."CreateDate",
+    CASE 
+        WHEN T0."DocType" = 'I' THEN 'Articulo'
+        WHEN T0."DocType" = 'S' THEN 'Servicio'
+    END AS "Tipo",
+    T1."ItemCode",
+    COALESCE(T2."ItemName", T1."Dscription")
+    
+   
+FROM OPOR T0 
+INNER JOIN POR1 T1 ON T0."DocEntry" = T1."DocEntry"
+LEFT JOIN PRQ1 P1 ON T1."BaseEntry" = P1."DocEntry" AND T1."BaseLine" = P1."LineNum"
+INNER JOIN OPRQ P2 ON P1."DocEntry" = P2."DocEntry"
+LEFT JOIN OITM T2 ON T1."ItemCode" = T2."ItemCode"
+WHERE T0."DocStatus" = 'O' 
+AND (
+    (T0."CreateDate" = ADD_DAYS(CURRENT_DATE, -1) AND T0."DocTime" >= 960) -- desde ayer 16:00 en adelante , 960 minutos.
+    OR
+    (T0."CreateDate" = CURRENT_DATE AND T0."DocTime" < 960) -- hasta hoy antes de 16:00
+)
+
+--AND T0."CreateDate" >= ADD_DAYS(CURRENT_DATE, -7)
+AND P2."Requester" = 'MAN01'
+ORDER BY P2."DocDate" DESC;
+
+
+-- *********************************************************************************************************
+
+SELECT
+    --P2."DocEntry",
+    P2."DocNum" AS "NumDocSC",
+    P2."DocDate" AS "FechaDocSC",
+    P2."DocTime" AS "HoraDocSC",
+    --P2."CreateTS",
+    
+    --T0."DocEntry",
+    T0."DocNum" AS "NumDocPedido",
+    T0."DocDate" AS "FechaDocPedido",
+    T0."DocTime" AS "HoraDocPedido",
+    --T0."CreateTS",
+    T0."CreateDate",
+    CASE 
+        WHEN T0."DocType" = 'I' THEN 'Articulo'
+        WHEN T0."DocType" = 'S' THEN 'Servicio'
+    END AS "Tipo",
+    T1."ItemCode",
+    COALESCE(T2."ItemName", T1."Dscription")
+    
+   
+FROM OPOR T0 
+INNER JOIN POR1 T1 ON T0."DocEntry" = T1."DocEntry"
+LEFT JOIN PRQ1 P1 ON T1."BaseEntry" = P1."DocEntry" AND T1."BaseLine" = P1."LineNum"
+INNER JOIN OPRQ P2 ON P1."DocEntry" = P2."DocEntry"
+LEFT JOIN OITM T2 ON T1."ItemCode" = T2."ItemCode"
+WHERE T0."DocStatus" = 'O' 
+AND (
+    (T0."CreateDate" = ADD_DAYS(CURRENT_DATE, -1) AND T0."DocTime" >= 960) -- desde ayer 16:00 en adelante , 960 minutos.
+    OR
+    (T0."CreateDate" = CURRENT_DATE AND T0."DocTime" < 960) -- hasta hoy antes de 16:00
+)
+
+--AND T0."CreateDate" >= ADD_DAYS(CURRENT_DATE, -7)
+AND P2."Requester" = 'MAN01'
+ORDER BY P2."DocDate" DESC;

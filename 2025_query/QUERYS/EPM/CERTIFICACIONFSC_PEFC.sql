@@ -1,0 +1,6 @@
+SELECT T0."QryGroup14",T0."QryGroup13",*  FROM OITM T0 WHERE T0."ItemCode" = '99AVH03080001'
+
+
+
+
+OITG
