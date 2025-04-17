@@ -376,4 +376,4 @@ AND (
 
 --AND T0."CreateDate" >= ADD_DAYS(CURRENT_DATE, -7)
 AND P2."Requester" = 'MAN01'
-ORDER BY P2."DocDate" DESC;
+ORDER BY P2."DocDate" DESC; 
